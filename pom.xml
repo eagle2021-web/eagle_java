@@ -18,6 +18,7 @@
     <modules>
         <module>eagle_common</module>
         <module>eagle_core</module>
+        <module>eagle_mysql</module>
     </modules>
 
     <properties>
