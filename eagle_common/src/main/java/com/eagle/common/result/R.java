@@ -7,7 +7,6 @@ import java.util.Map;
 
 @Data
 @SuppressWarnings("unused")
-
 public class R {
 
     private Integer code;

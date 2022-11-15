@@ -1,4 +1,4 @@
-package com.eagle.controller;
+package com.eagle.core.controller;
 
 import com.eagle.common.result.R;
 import org.springframework.web.bind.annotation.GetMapping;
