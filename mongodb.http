@@ -1,0 +1,2 @@
+GET http://localhost:8113/mongodb/health
+Accept: application/json
