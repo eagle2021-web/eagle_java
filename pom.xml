@@ -20,6 +20,7 @@
         <module>eagle_core</module>
         <module>eagle_mysql</module>
         <module>eagle_mongodb</module>
+        <module>eagle_redis</module>
     </modules>
 
     <properties>
