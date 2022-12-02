@@ -21,6 +21,7 @@
         <module>eagle_mysql</module>
         <module>eagle_mongodb</module>
         <module>eagle_redis</module>
+        <module>eagle_leetcode</module>
     </modules>
 
     <properties>
