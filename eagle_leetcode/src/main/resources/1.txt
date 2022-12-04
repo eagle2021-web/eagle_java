@@ -391,3 +391,103 @@ class Codec {
         return true;
     }
 }
+    public int maxPathSum(TreeNode root) {
+        dfs(root);
+        return res;
+    }
+
+    public int dfs(TreeNode node) {
+        if (node==null)return 0;
+        int l = dfs(node.left), r = dfs(node.right);
+        l = Math.max(l, 0);
+        r = Math.max(r, 0);
+        int max = node.val + l + r;
+        res = Math.max(max, res);
+        return node.val + Math.max(l, r);
+    }
+   void dfs(int[] toppingCosts, int p,  int curCosts){
+        if(Math.abs(res - target) >= Math.abs(curCosts - target)){
+            if(Math.abs(res - target) >Math.abs(curCosts - target)) {
+                res = curCosts;
+            }else {
+                res = Math.min(curCosts, res);
+            }
+        }
+        if(curCosts == target){
+            res = target;
+            return;
+        }
+
+        if(p == toppingCosts.length)return;
+        int cur_cost = toppingCosts[p];
+        dfs(toppingCosts, p + 1, cur_cost + curCosts);
+        dfs(toppingCosts, p + 1, cur_cost * 2+ curCosts);
+        dfs(toppingCosts, p + 1,  curCosts);
+    }
+
+    int biggerMin = Integer.MAX_VALUE;
+    public int closestCost(int[] baseCosts, int[] toppingCosts, int target) {
+        int min = Arrays.stream(baseCosts).min().getAsInt();
+        if(min >= target){
+            return min;
+        }
+        int res = target * 2 - min;
+        int n = toppingCosts.length;
+        boolean[] dp = new boolean[target + 1];
+        for (int baseCost : baseCosts) {
+            if(baseCost <= target){
+                dp[baseCost]  = true;
+            } else {
+                res = Math.min(res, baseCost);
+            }
+        }
+        for (int cur_cost : toppingCosts) {
+            for(int j = target; j >= 1; j--){
+                boolean tmp = dp[j];
+                for(int k = 1; k <= 2; k++){
+                    int cost = cur_cost * k;
+                    if(tmp && j + cost >= target){
+                        res = Math.min(res, j + cost);
+                    }
+                    if(j - cost > 0){
+                        dp[j] |= dp[j - cost];
+                    }
+                }
+            }
+        }
+
+        for(int i = 0; i <= res - target; i++){
+            if(dp[target - i])return target - i;
+        }
+        return res;
+    }
+    int res = Integer.MIN_VALUE / 10;
+    int target = 0;
+    int m;
+    int n;
+    static final int[][] dirs = new int[][]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+    int[][] arr;
+    public int longestIncreasingPath(int[][] matrix) {
+        this.m = matrix.length;
+        this.n = matrix[0].length;
+        int res = 1;
+        this.arr = new int[m][n];
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                res = Math.max(res, dfs(matrix, i, j));
+            }
+        }
+        return res;
+    }
+
+    int dfs(int[][] matrix, int x, int y){
+        if(arr[x][y] != 0)return arr[x][y];
+        arr[x][y] = 1;
+        for (int[] dir : dirs) {
+            int new_x = x + dir[0], new_y = y + dir[1];
+            if(new_x >= 0 && new_x< m && new_y >=0 && new_y < n && matrix[new_x][new_y] > matrix[x][y]){
+                arr[x][y] = Math.max(arr[x][y], dfs(matrix, new_x, new_y) + 1);
+            }
+        }
+        return arr[x][y];
+    }
