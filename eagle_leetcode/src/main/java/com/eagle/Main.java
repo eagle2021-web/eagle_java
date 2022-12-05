@@ -15,50 +15,78 @@ class Solution {
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        s.closestCost(new int[]{2,3}, new int[]{4, 5, 100}, 18);
+//        s.boxDelivering(new int[][]{{1, 1}, {2,1 }, {1,1}}, 2, 3, 3);
     }
 
 
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int n1 = nums1.length, n2 = nums2.length;
+        int n = (n1 + n2 + 1) / 2, nn = n + (n1 + n2) % 2 == 0 ? 1 : 0;
+        return (getKthElement(nums1, nums2, n) + getKthElement(nums1, nums2, nn)) / 2.0;
+    }
 
-    int[] f;
-    public int numSimilarGroups(String[] strs) {
-        int n = strs.length;
-        f = new int[n];
-        for (int i = 0; i < n; i++) {
-            f[i] = i;
-        }
+    public int getKthElement(int[] nums1, int[] nums2, int k) {
+        int m = nums1.length, n = nums2.length;
+        int index1 = 0, index2 = 0, k2 = k;
+        while (true){
+            if(index1 == m)return nums2[k - index1 - 1];
+            if(index2 == n)return nums1[k - index2 - 1];
+            if(k2 == 1)return Math.min(nums1[index1], nums2[index2]);
 
-        for (int i = 0; i < n; i++) {
-            for(int j = i + 1; j < n; j++){
-                int f1 = find(i), f2 = find(j);
-                if(f1 == f2)continue;
-                if(match(strs[i], strs[j])){
-                    f[f1] = f2;
-                }
+            int half = k2 / 2;
+            int newIndex1 = Math.min(m, index1 + half) - 1;
+            int newIndex2 = Math.min(n , index2 + half) - 1;
+
+            if(nums1[newIndex1] <= nums2[newIndex2]){
+
+                k2 -= newIndex1 - index1 + 1;
+                index1 = newIndex1 + 1;
+            } else {
+                k2 -= newIndex2 - index2 + 1;
+                index2 = newIndex2 + 1;
             }
         }
-
-        int res = 0;
-        for (int i = 0; i < n; i++) {
-            if(f[i] == i)res++;
-        }
-        return res;
     }
 
-    public int find(int x){
-        return x == f[x] ? x : (f[x] = find(f[x]));
+    public int trap(int[] height) {
+        return 1;
     }
 
-    public boolean match(String s1, String s2){
-        int n1 = s1.length(), n2 = s2.length();
-        if(n1 != n2)return false;
-        int cnt = 0;
-        for (int i = 0; i < n1; i++) {
-            if(s1.charAt(i) != s2.charAt(i)){
-                cnt++;
-                if(cnt > 2)return false;
+
+
+
+    public int getKthElement2(int[] nums1, int[] nums2, int k) {
+
+        int length1 = nums1.length, length2 = nums2.length;
+        int index1 = 0, index2 = 0;
+        int kthElement = 0;
+
+        while (true) {
+            // 边界情况
+            if (index1 == length1) {
+                return nums2[index2 + k - 1];
+            }
+            if (index2 == length2) {
+                return nums1[index1 + k - 1];
+            }
+            if (k == 1) {
+                return Math.min(nums1[index1], nums2[index2]);
+            }
+
+            // 正常情况
+            int half = k / 2;
+            int newIndex1 = Math.min(index1 + half, length1) - 1;
+            int newIndex2 = Math.min(index2 + half, length2) - 1;
+            int pivot1 = nums1[newIndex1], pivot2 = nums2[newIndex2];
+            if (pivot1 <= pivot2) {
+                k -= (newIndex1 - index1 + 1);
+                index1 = newIndex1 + 1;
+            } else {
+                k -= (newIndex2 - index2 + 1);
+                index2 = newIndex2 + 1;
             }
         }
-        return true;
     }
+
+
 }

@@ -491,3 +491,228 @@ class Codec {
         }
         return arr[x][y];
     }
+    s.closestCost(new int[]{2,3}, new int[]{4, 5, 100}, 18);
+    int[] f;
+    public int numSimilarGroups(String[] strs) {
+        int n = strs.length;
+        f = new int[n];
+        for (int i = 0; i < n; i++) {
+            f[i] = i;
+        }
+
+        for (int i = 0; i < n; i++) {
+            for(int j = i + 1; j < n; j++){
+                int f1 = find(i), f2 = find(j);
+                if(f1 == f2)continue;
+                if(match(strs[i], strs[j])){
+                    f[f1] = f2;
+                }
+            }
+        }
+
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            if(f[i] == i)res++;
+        }
+        return res;
+    }
+
+    public int find(int x){
+        return x == f[x] ? x : (f[x] = find(f[x]));
+    }
+
+    public boolean match(String s1, String s2){
+        int n1 = s1.length(), n2 = s2.length();
+        if(n1 != n2)return false;
+        int cnt = 0;
+        for (int i = 0; i < n1; i++) {
+            if(s1.charAt(i) != s2.charAt(i)){
+                cnt++;
+                if(cnt > 2)return false;
+            }
+        }
+        return true;
+    }
+    static final int N = 26, M = N * N;
+    int[] indexs = new int[N], rights = new int[M], lefts = new int[M];
+    int[] in = new int[N];
+    int idx = 0, cnt = 0;
+    public String alienOrder(String[] words) {
+        int n = words.length;
+        Arrays.fill(indexs, -1);
+        for (int i = 0; i < n; i++) {
+            String s2 = words[i];
+            for (int j = 0; j < s2.length(); j++) {
+                cnt |= 1 << (int)(s2.charAt(j) - 'a');
+            }
+
+            for(int j = 0; j < i; j++){
+                String s1 = words[j];
+                if(!match(s1, s2))return "";
+            }
+        }
+        LinkedList<Integer> q = new LinkedList<>();
+        String tt = Integer.toString(cnt, 2);
+        for (int i = 0; i < N; i++) {
+            boolean exist = ((1 << i) & cnt) != 0;
+            if(exist && in[i] == 0){
+                q.addLast(i);
+            }
+        }
+        int tmp = Integer.bitCount(cnt);
+
+        StringBuffer sb = new StringBuffer();
+        while (!q.isEmpty()){
+            Integer i = q.pollFirst();
+            sb.append((char) (i + 'a'));
+            for (int index = indexs[i]; index != -1; index = lefts[index]){
+                int right = rights[index];
+                in[right]--;
+                if(in[right] == 0)q.addLast(right);
+            }
+        }
+        String s = sb.toString();
+        System.out.println(s);
+        return s.length() == Integer.bitCount(cnt) ? s : "";
+    }
+
+    void add(int left, int right){
+        rights[idx] = right;
+        lefts[idx] = indexs[left];
+        indexs[left] = idx;
+        idx++;
+        in[right]++;
+    }
+    boolean match(String s1, String s2) {
+        int m = s1.length(), n = s2.length(), len = Math.min(m, n);
+        for (int i = 0; i < len; i++) {
+            char c1 = s1.charAt(i), c2 = s2.charAt(i);
+            if(c1 != c2){
+                add(c1 - 'a', c2 - 'a');
+                return true;
+            }
+        }
+        return m <= n;
+    }
+    static final int N = 26, M = N * N;
+    int[] indexs = new int[N], rights = new int[M], lastIndexs = new int[M];
+    int[] in = new int[N];
+    int idx = 0, cnt = 0;
+    public String alienOrder(String[] words) {
+        int n = words.length;
+        Arrays.fill(indexs, -1);
+        for (int i = 0; i < n; i++) {
+            String s2 = words[i];
+            for (int j = 0; j < s2.length(); j++) {
+                char c = s2.charAt(j);
+                cnt |= (1 << (c - 'a'));
+            }
+            for(int j = 0; j < i; j++){
+                String s1 = words[j];
+                if(!sorted(s1, s2))return "";
+            }
+        }
+
+        LinkedList<Integer> q = new LinkedList<>();
+        for (int i = 0; i < N; i++) {
+            boolean e = ((1 << i) & cnt) != 0;
+            if(e && in[i] == 0){
+                q.addLast(i);
+            }
+        }
+
+        StringBuffer sb = new StringBuffer();
+        while (!q.isEmpty()){
+            Integer i = q.pollFirst();
+            sb.append((char)(i + 'a'));
+            for (int index = indexs[i]; index != -1; index = lastIndexs[index]) {
+                int right = rights[index];
+                in[right]--;
+                if(in[right] ==0)q.addLast(right);
+            }
+        }
+        int c = Integer.bitCount(cnt);
+        return c == sb.length() ? sb.toString() : "";
+    }
+    void add(int left, int right) {
+        rights[idx] = right;
+        lastIndexs[idx] = indexs[left];
+        indexs[left] = idx;
+        idx++;
+        in[right]++;
+    }
+    boolean sorted(String s1, String s2) {
+        int n1 = s1.length(), n2 = s2.length(), len = Math.min(n1, n2);
+        for (int i = 0; i < len; i++) {
+            char c1 = s1.charAt(i), c2 = s2.charAt(i);
+            if(c1 != c2){
+                add(c1 - 'a', c2 - 'a');
+                return true;
+            }
+        }
+        return n1 <= n2;
+    }
+
+        int[] dp = new int[n + 10], neg = new int[n + 10], weights = new int[n + 10];
+        int neg_tmp = 0, w_tmp = 0;
+        for (int i = 1; i <= n; i++) {
+            if(i > 1){
+                neg_tmp += boxes[i - 1][0] == boxes[i - 2][0] ? 0 : 1;
+                neg[i] = neg_tmp;
+            }
+            w_tmp += boxes[i - 1][1];
+            weights[i] = w_tmp;
+        }
+
+        LinkedList<Integer> q = new LinkedList<>();
+        q.addLast(0);
+        int[] g = new int[n + 10];
+        for(int i = 1; i <= n; i++){
+            while (!q.isEmpty() && (i - q.peekFirst() > maxBoxes || weights[i] - weights[q.peekFirst()] > maxWeight)){
+                q.pollFirst();
+            }
+            dp[i] = g[q.peekFirst()] + neg[i] + 2;
+
+            if(i != n){
+                // f[i] = f[j] + neg[i] - neg[j + 1] + 2
+                // g[j] = f[j] - neg[j+1]
+                g[i] = dp[i] - neg[i + 1];
+                while (!q.isEmpty() && g[q.peekLast()] >= g[i])q.pollLast();
+                q.addLast(i);
+            }
+        }
+        return dp[n];
+
+    public int boxDelivering(int[][] boxes, int portsCount, int maxBoxes, int maxWeight) {
+        int n = boxes.length;
+        int[] weights = new int[n + 1], neg = new int[n + 1];
+        int carry = 0;
+        for(int i = 1; i <= n; i++){
+            if(i > 1){
+                carry  += boxes[i - 1][0] == boxes[i - 2][0] ? 0 : 1;
+                neg[i] = carry;
+            }
+            weights[i] = weights[i - 1] + boxes[i - 1][1];
+        }
+        LinkedList<Integer> q = new LinkedList<>();
+        q.addLast(0);
+        int[] f = new int[n + 1];
+        int[] g = new int[n + 1];
+        // f[i] = f[j] + neg[i] - neg[j + 1] + 2
+        // g[j] = f[j] - neg[j + 1]
+
+        for(int i = 1; i <= n; i++){
+            while (!q.isEmpty() && (i - q.peekFirst() > maxBoxes ||
+                    weights[i] - weights[q.peekFirst()]  > maxWeight)){
+                q.pollFirst();
+            }
+            f[i] = g[q.peekFirst()] + neg[i] + 2;
+            if(n != i){
+                g[i] = f[i] - neg[i + 1];
+                while (!q.isEmpty() && g[q.peekLast()] >= g[i])q.pollLast();
+                q.addLast(i);
+            }
+        }
+        return f[n];
+    }
+
