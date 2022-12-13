@@ -1,3 +1,100 @@
+    public static void main(String[] args) {
+        Solution s = new Solution();
+        int a = s.minDistance("intention", "execution");
+        System.out.println(a);
+    }
+
+    public int minDistance(String word1, String word2) {
+        int m = word1.length(), n = word2.length();
+        int[][] dp = new int[m + 10][n + 10];
+        for(int i = 0; i <= m; i++){
+            for(int j = 0; j <= n; j++){
+                if(i == 0){
+                    dp[i][j] = j;
+                    continue;
+                }
+                if(j == 0){
+                    dp[i][j] = i;
+                    continue;
+                }
+                char c1 = word1.charAt(i - 1), c2 = word2.charAt(j - 1);
+                dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+                if(c1 == c2){
+                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        int l = 0, r = 0, n = words.length();
+        new ArrayList
+        while(r < n){
+            int cur_len = 0;
+            while (r < n && cur_len + r - l <= maxWidth) {
+                cur_len += s
+                r++;
+            }
+            StringBuffer sb = new StringBuffer();
+            if(r == n){
+                while (l < r){
+                    sb.append(words[l++]);
+                    if(l !=r)sb.append(' ');
+                }
+                while(sb.length() < maxWidth)sb.append(" ");
+
+            }
+
+        }
+
+    }
+    public List<String> fullJustify(String[] words, int maxWidth) {
+ //        ArrayList<String> tmp = new ArrayList<>();
+ //        for (String word : words) {
+ //            if(word.length() <= maxWidth)tmp.add(word);
+ //        }
+ //        words = tmp.toArray(new String[]{});
+         int l = 0, r = 0, n = words.length;
+         ArrayList<String> list = new ArrayList<String>();
+         while (r < n) {
+             l = r;
+             int cur_len = 0;
+             while (r < n && cur_len + words[r].length() + r - l <= maxWidth) {
+                 cur_len += words[r].length();
+                 r++;
+             }
+             StringBuffer sb = new StringBuffer();
+             if (r == n) {
+                 while (l < r) {
+                     sb.append(words[l++]);
+                     if (l != r) sb.append(' ');
+                 }
+                 while (sb.length() < maxWidth) sb.append(" ");
+                 list.add(sb.toString());
+                 break;
+             }
+             if(r - l == 1){
+                 sb.append(words[l]);
+                 supplementSpaces(sb, maxWidth);
+                 list.add(sb.toString());
+                 continue;
+             }
+             int dif = maxWidth - cur_len;
+             int each = dif / (r - l - 1), m = dif % (r - l - 1);
+             while (l < r) {
+                 sb.append(words[l]);
+                 if (l != r - 1) {
+                     appendSpace(sb, each + (m > 0 ? 1 : 0));
+                     m--;
+                 }
+                 l++;
+             }
+             System.out.println(sb.length());
+             list.add(sb.toString());
+         }
+         return list;
+     }
+
  public static void main(String[] args) {
         Solution s = new Solution();
         s.beautySum("aabcb");
