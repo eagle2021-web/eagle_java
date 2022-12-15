@@ -1,3 +1,78 @@
+       public int maxCoins(int[] nums) {
+           int n = nums.length;
+           int[] arr = new int[n + 2];
+           System.arraycopy(nums, 0, arr, 1, n);
+           arr[0] = arr[n + 1] = 1;
+           int[][] dp = new int[n + 2][n + 2];
+           for(int i = n - 1; i >= 0; i--){
+               for(int j = i + 2; j <= n+1; j++){
+                   for(int k = i + 1; k < j; k++){
+                       dp[i][j] = Math.max(dp[i][j], dp[i][k] + dp[k][j] + arr[i] * arr[k] * arr[j]);
+                   }
+               }
+           }
+           return dp[0][n + 1];
+       }
+public List<String> wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>(wordDict);
+        int n = s.length();
+        boolean[] dp = new boolean[n + 1];
+        dp[0] = true;
+        int[] prev = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                String s1 = s.substring(j - 1, i);
+                if (wordDict.contains(s1)) {
+                    dp[i] |= dp[j - 1];
+                    if (dp[j - 1]) {
+                        prev[i] |= 1 << (j - 1);
+                    }
+                }
+
+            }
+        }
+
+        ArrayList<String> list = new ArrayList<>();
+        dfs(prev, 0, s.toCharArray(), n, list);
+        return list;
+    }
+
+    String assemble(int mask, char[] s) {
+        StringBuffer sb = new StringBuffer();
+        int cur_idx = 0;
+        mask &= ~1;
+        while (true){
+            int low_bit = mask & -mask;
+            mask ^= low_bit;
+            int end_idx = Integer.numberOfTrailingZeros(low_bit);
+            for(int i = cur_idx; i < end_idx; i++){
+                sb.append(s[i]);
+            }
+            cur_idx = end_idx;
+            if(cur_idx == s.length)break;
+            sb.append(" ");
+        }
+
+        return sb.toString();
+    }
+
+    void dfs(int[] prev, int mask, char[] s, int i, List<String> list) {
+        if (i == 0) {
+            list.add(assemble(mask | (1 << s.length), s));
+            return;
+        }
+        int candidates = prev[i];
+        while (candidates != 0) {
+            String tmp = Integer.toBinaryString(candidates);
+            int low_bit = candidates & -candidates;
+            int idx = Integer.numberOfTrailingZeros(low_bit);
+            mask ^= 1 << (idx);
+            dfs(prev, mask, s, idx, list);
+            mask ^= 1 << (idx);
+            candidates ^= low_bit;
+        }
+    }
+
    int n = 0;
     int max = 0;
     int len = 0;
@@ -29,6 +104,7 @@
             set.add(cur);
             return;
         }
+
         if(idx >= cs.length)return;
         char c = cs[idx];
         if(c == '('){
