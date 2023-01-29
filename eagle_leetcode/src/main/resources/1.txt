@@ -1,3 +1,101 @@
+    }
+    public int maxProfit(int[] prices, int fee) {
+        int in = Integer.MAX_VALUE, out = 0, pass = 0;
+        for(int cur: prices){
+            if(cur > in){
+                out += cur - in;
+                in = cur;
+            }else if(cur + fee < in) {
+                in = cur + fee;
+            }
+        }
+        return out;
+    }
+
+    public int maxProduct(int[] nums) {
+        if(nums.length == 1)return nums[0];
+        int ans = 0, neg = 0, pos = 0;
+        for(int cur: nums){
+            if(cur == 0){
+                neg = 0;
+                pos = 0;
+            } else if(cur > 0) {
+                neg = neg * cur;
+                pos = pos > 0 ? cur * pos : cur;
+                ans = Math.max(pos, ans);
+            } else {
+                int neg2 = neg;
+                neg = pos != 0 ? pos * cur : cur;
+                pos = neg2 * cur;
+                ans = Math.max(ans, pos);
+            }
+        }
+        return ans;
+    }
+   public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>(wordDict);
+        int n = s.length();
+        boolean[] dp = new boolean[n + 1];
+        dp[0] = true;
+        for(int i = 1; i <= n; i++){
+            for(int j = 0; j < i; j++){
+                String s1 = s.substring(j, i);
+                if(dp[j] && set.contains(s1)){
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
+
+    public int maxProfit(int[] prices) {
+        int in = -prices[0], out = 0, wait = 0;
+        for(int j = 1; j < prices.length; j++){
+            int o = out, i = in, w = wait;
+            wait = Math.max(wait, out);
+            out = Math.max(out, in + prices[j]);
+            in = Math.max(in, w - prices[j]);
+        }
+        return out;
+    }
+
+    public int minElements(int[] nums, int limit, int goal) {
+        int sum = 0;
+        for(int num: nums){
+            sum += num;
+        }
+        long dif = 0L + goal - sum;
+        int ans = (int)((Math.abs(dif) - 1L) / limit + 1);
+        return ans;
+    }
+//        s.minElements(new int[]{1, -1, 1}, 3, -4);
+//        s.maxProfit(new int[]{1,2,3,0,2});
+        s.wordBreak("leetcode", new ArrayList<>(Arrays.asList("leet","code")));
+    public int minMoves(int[] nums, int n) {
+        // dp[m][n] 代表第m个位位置有n个连续1所需要移动的次数
+        int cntOne = 0;
+        for(int num: nums){
+            if(num > 0)cntOne++;
+        }
+        int m = nums.length, ans = Integer.MAX_VALUE / 2;
+        int[][] dp = new int[m + 1][n + 1];
+        for(int i = 0; i <= m; i++){
+            Arrays.fill(dp[i], Integer.MAX_VALUE / 2);
+        }
+        dp[0][0] = 0;
+        for(int i = 1; i <= m; i++){
+            int t = nums[i - 1] == 1 ? 0 : 1;
+            dp[i][1] = t;
+            for(int j = 2; j <= n; j++){
+                dp[i][j] = dp[i - 1][j - 1] + t;
+            }
+            if(dp[i][n] <= ans){
+                ans = dp[i][n];
+            }
+        }
+        return ans;
+    }
 public String getPermutation(int n, int k) {
         int[] f = new int[n + 1];
         f[0] = 1;
@@ -60,6 +158,7 @@ public String getPermutation(int n, int k) {
         public int maxScoreSightseeingPair(int[] values) {
 
         }
+
        public int maxCoins(int[] nums) {
            int n = nums.length;
            int[] arr = new int[n + 2];

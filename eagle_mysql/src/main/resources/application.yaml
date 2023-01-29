@@ -1,6 +1,7 @@
 server:
   port: 8112 # 服务端口
-
+  servlet:
+    context-path: /eagle
 spring:
   profiles:
     active: dev # 环境设置
