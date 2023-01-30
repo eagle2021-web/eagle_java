@@ -5,4 +5,8 @@ Accept: application/json
 GET http://49.232.8.199:9999/love/guantingxin
 Accept: text/html
 
+###
+GET http://localhost:8112/eagle/health
+Accept: text/html
+
 

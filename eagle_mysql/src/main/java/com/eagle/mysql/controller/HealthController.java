@@ -27,6 +27,11 @@ public class HealthController {
 
     @GetMapping("")
     public R getHealth() {
+        return R.ok().data("health", "ok");
+    }
+
+    @GetMapping("/one")
+    public R getOne() {
         Health health = healthService.getById(1);
         return R.ok().data("health", health);
     }
