@@ -28,25 +28,3 @@ public class ServiceMongodbApplication {
 
 }
 
-@RestController
-@RequestMapping("/mongodb")
-class HealthController {
-
-    @Resource
-    private MongoTemplate mongoTemplate;
-
-    @Data
-    static
-    class Student {
-        public String name;
-    }
-
-    @GetMapping("/health")
-    public R getHealth() {
-        Criteria gt = Criteria
-                .where("name").is("eagle");
-        Query query = new Query(gt);
-        Student one = mongoTemplate.findOne(query, Student.class);
-        return R.ok().data("health", one);
-    }
-}
