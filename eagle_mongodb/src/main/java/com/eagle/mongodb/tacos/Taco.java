@@ -6,11 +6,13 @@ import java.util.List;
 
 
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
 @Data
+@Document(collection = "taco")
 public class Taco{
 
     @NotNull

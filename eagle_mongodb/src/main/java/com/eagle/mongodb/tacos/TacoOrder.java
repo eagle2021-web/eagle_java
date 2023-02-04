@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
 @Data
-@Document
+@Document("tacoOrder")
 public class TacoOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;

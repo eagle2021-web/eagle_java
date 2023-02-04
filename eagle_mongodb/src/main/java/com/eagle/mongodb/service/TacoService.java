@@ -5,27 +5,22 @@ import com.eagle.mongodb.tacos.Ingredient;
 import com.eagle.mongodb.tacos.Taco;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class TacoService {
-    private final TacoRepository tacoRepository;
-
-    public TacoService(TacoRepository tacoRepository) {
-        this.tacoRepository = tacoRepository;
-    }
+    @Resource
+    private TacoRepository tacoRepository;
 
     public void add() {
         Taco taco = new Taco();
         taco.setCreatedAt(new Date());
-        taco.setName("tmp");
-        ArrayList<Ingredient> ingredients = new ArrayList(){{
-            add(new Ingredient(UUID.randomUUID().toString(), "tmp_name", Ingredient.Type.CHEESE));
-        }};
-        taco.setIngredients(ingredients);
-        tacoRepository.save(new Taco());
+        taco.setName("tmp1212");
+        taco.addIngredient(new Ingredient(null, "tmp_name", Ingredient.Type.CHEESE));
+        System.out.println(tacoRepository.save(taco));
     }
 }
